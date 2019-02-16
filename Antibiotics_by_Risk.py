@@ -17,7 +17,6 @@ with open(path_master+'April 2017 - Antibiotic by Risk1.csv') as fp:
                           usecols=['Unnamed: 1', 'Treated', 'Repulls', 'Mortalities', 'Treatment Success',
                                    'Case Fatality Rate','$/Hd/Rx', 'Treatment $'])
 df_ABR1.rename(columns={'Unnamed: 1': 'Drug'}, inplace=True)
-df_ABR1.head()
 
 
 # In[ ]:
@@ -47,7 +46,24 @@ df_ABR1['Mortalities'] = df_ABR1['Mortalities'].apply(lambda x: int(x))
 # In[ ]:
 
 
-df_ABR1.dtypes
+# Remove dollar signs from columns
+df_ABR1['Treatment $'] = df_ABR1['Treatment $'].apply(lambda x: x[1:])
+df_ABR1['$/Hd/Rx'] = df_ABR1['$/Hd/Rx'].apply(lambda x: x[1:])
+
+# Remove dashes from columns
+for i in range(len(df_ABR1)):
+    for j in ['$/Hd/Rx','Treatment $']:
+        if df_ABR1.iloc[i].loc[j] == '-':
+            df_ABR1.iloc[i].loc[j] = 0.0
+        else:
+            m = df_ABR1.iloc[i].loc[j]
+            df_ABR1.iloc[i].loc[j] = m.replace(',','')
+            m = m.replace(' ','')
+            df_ABR1.iloc[i].loc[j] = m.replace(',','')
+
+# Change str -> int for numerical columns
+df_ABR1['Treatment $'] = df_ABR1['Treatment $'].apply(lambda x: float(x))
+df_ABR1['$/Hd/Rx'] = df_ABR1['$/Hd/Rx'].apply(lambda x: float(x))
 
 
 # ### Run this below to convert to .py file before pushing to GitHub
