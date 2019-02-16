@@ -31,7 +31,6 @@ for i in range(len(df_ABR1)):
             m = df_ABR1.iloc[i].loc[j]
             m = m.replace(' ','')
             df_ABR1.iloc[i].loc[j] = m.replace(',','')
-            #print(m,type(m))
 
 
 # In[ ]:
@@ -61,9 +60,17 @@ for i in range(len(df_ABR1)):
             m = m.replace(' ','')
             df_ABR1.iloc[i].loc[j] = m.replace(',','')
 
-# Change str -> int for numerical columns
+# Change str -> float for numerical columns
 df_ABR1['Treatment $'] = df_ABR1['Treatment $'].apply(lambda x: float(x))
 df_ABR1['$/Hd/Rx'] = df_ABR1['$/Hd/Rx'].apply(lambda x: float(x))
+
+
+# In[ ]:
+
+
+# Remove percent signs from columns and convery str -> float
+df_ABR1['Treatment Success'] = df_ABR1['Treatment Success'].apply(lambda x: float(x[:-1]))
+df_ABR1['Case Fatality Rate'] = df_ABR1['Case Fatality Rate'].apply(lambda x: float(x[:-1]))
 
 
 # ### Run this below to convert to .py file before pushing to GitHub
