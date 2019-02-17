@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# ### Set up master path
+
 # In[ ]:
 
 
 path_master = r'C:/Users/endwy/Documents/Columbia MSBA/Spring 2019/E4524 - Analytics in Practice/Data/Csv/'
 
+
+# ### ABR_1 Cleaning
 
 # In[ ]:
 
@@ -71,6 +75,47 @@ df_ABR1['$/Hd/Rx'] = df_ABR1['$/Hd/Rx'].apply(lambda x: float(x))
 # Remove percent signs from columns and convery str -> float
 df_ABR1['Treatment Success'] = df_ABR1['Treatment Success'].apply(lambda x: float(x[:-1]))
 df_ABR1['Case Fatality Rate'] = df_ABR1['Case Fatality Rate'].apply(lambda x: float(x[:-1]))
+
+
+# ### ABR_2 Cleaning/Merge
+
+# In[ ]:
+
+
+import pandas as pd
+with open(path_master+'April 2017 - Antibiotic by Risk2.csv') as fp:
+    df_ABR2 = pd.read_csv(fp)
+df_ABR2.head()
+
+
+# In[ ]:
+
+
+df_ABR1.head()
+
+
+# ### ABR_3 Cleaning/Merge
+
+# In[ ]:
+
+
+import pandas as pd
+with open(path_master+'April 2017 - Antibiotic by Risk3.csv') as fp:
+    df_ABR3 = pd.read_csv(fp, 
+                          usecols=['0','1','2','3','4','5','6','8','10'],
+                         keep_default_na=False)
+df_ABR3.rename(columns={'0':'Drug', '1':'Treated', '2':'Repulls', '3':'Mortalities', '4':'MortalitiesB', 
+                        '5':'Treatment Success', '6':'Case Fatality Rate', '8':'$/Hd/Rx','10':'Treatment $'}, inplace=True)
+
+
+# In[ ]:
+
+
+# Concatenate mortalities column
+for i in range(len(df_ABR3)):
+    df_ABR3.iloc[i].loc['Mortalities'] = (df_ABR3.iloc[i].loc['Mortalities'])+(df_ABR3.iloc[i].loc['MortalitiesB'])
+del df_ABR3['MortalitiesB']
+df_ABR3.head()
 
 
 # ### Run this below to convert to .py file before pushing to GitHub
