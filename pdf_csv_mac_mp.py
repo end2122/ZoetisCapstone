@@ -4,6 +4,7 @@ import os
 from tabula import read_pdf
 from PyPDF2 import PdfFileWriter, PdfFileReader
 
+
 if os.path.exists('./Data_single_pdf') == False:  # Create a Csv folder to store csv data
     os.makedirs('./Data_single_pdf')
 
@@ -65,6 +66,7 @@ def get_csv(file_name):
                             continue
     return None
 
-if __bane__ == '__main__':
+### Notice that only mac and linux allow python to use multiprocess, window GIL locks the cpu to one for python
+if __name__ == '__main__':   #this part will only run as as a main, and not run when imported
     pool = multiprocessing.Pool(os.cpu_count()-1)    #use all possible cpu' thread - 1, incase the user want to do things at the samte time
     pool.map(get_csv, file_names)   #start pool.mapping the variables list to the function 
