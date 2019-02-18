@@ -29,6 +29,7 @@ for file_name in file_names:
         data_file_names.append(file_name)
 
 
+# function to convert pdf to csv
 def get_csv(file_name):
     with open(f'./Data/{file_name}', 'rb') as fp: #read byte open pdf
         input_pdf = PdfFileReader(fp)  #load pdf into PyPdfReader
@@ -65,5 +66,5 @@ def get_csv(file_name):
     return None
 
 if __bane__ == '__main__':
-    pool = multiprocessing.Pool(os.cpu_count()-1)
-    pool.map(get_csv, file_names)
+    pool = multiprocessing.Pool(os.cpu_count()-1)    #use all possible cpu' thread - 1, incase the user want to do things at the samte time
+    pool.map(get_csv, file_names)   #start pool.mapping the variables list to the function 
