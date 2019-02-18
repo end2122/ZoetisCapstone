@@ -1,2 +1,4 @@
 tabula-py
 PyPDF2
+pandas
+numpy
