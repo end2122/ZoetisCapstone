@@ -3,10 +3,25 @@
 
 # ### Set up master path
 
-# In[1]:
+# In[ ]:
 
 
 path_master = r'C:/Users/endwy/Documents/Columbia MSBA/Spring 2019/E4524 - Analytics in Practice/Data/Csv/'
+
+
+# ### Create List with ABR file names to iterate through
+
+# In[ ]:
+
+
+import re
+import os
+
+#read in files' names
+ABR_file_names = list()
+for path, subdirs, files in os.walk(path_master):
+    for filename in files:
+        file_names.append(filename)
 
 
 # ### ABR_1 Import
@@ -83,7 +98,7 @@ with open(path_master+'April 2017 - Antibiotic by Risk4.csv') as fp:
 # ### ABR_5 Import
 # ##### 10 columns, Mortalities split into 2 columns
 
-# In[2]:
+# In[ ]:
 
 
 import pandas as pd
@@ -105,47 +120,38 @@ df_ABR = pd.concat(frames)
 # In[ ]:
 
 
+def convert_1(x):
+    if re.search(pattern = r'\w+',string=x):
+        return x
+    x=x.strip()
+    if x[-1]=='%':
+        return float(x.replace('%,'))
+    if x=='-':
+        return 0
+    if x[0]=='$':
+        return float(x[1:].replace(',','').replace('-','0'))
+
+def convert_2(x):
+    return None
+
+def convert_3(x):
+    return None
+
+
+# In[ ]:
+
+
 def ABR_Clean(df):
     """Cleans fully merged df_ABR columns to ensure appropriate dtypes/formats"""
-    # Remove dashes from columns
-    for i in range(len(df)):
-        for j in ['Treated','Repulls','Mortalities']:
-            if df.iloc[i].loc[j] == '-':
-                df.iloc[i].loc[j] = 0
-            else:
-                m = df.iloc[i].loc[j]
-                m = m.replace(' ','')
-                df.iloc[i].loc[j] = m.replace(',','')
-                
-    # Change str -> int for numerical columns
-    df['Treated'] = df['Treated'].apply(lambda x: int(x))
-    df['Repulls'] = df['Repulls'].apply(lambda x: int(x))
-    df['Mortalities'] = df['Mortalities'].apply(lambda x: int(x))
-    
-    # Remove dollar signs from columns
-    df['Treatment $'] = df['Treatment $'].apply(lambda x: x[1:])
-    df['$/Hd/Rx'] = df['$/Hd/Rx'].apply(lambda x: x[1:])
-
-    # Remove dashes from columns
-    for i in range(len(df)):
-        for j in ['$/Hd/Rx','Treatment $']:
-            if df.iloc[i].loc[j] == '-':
-                df.iloc[i].loc[j] = 0.0
-            else:
-                m = df.iloc[i].loc[j]
-                df.iloc[i].loc[j] = m.replace(',','')
-                m = m.replace(' ','')
-                df.iloc[i].loc[j] = m.replace(',','')
-
-    # Change str -> float for numerical columns
-    df['Treatment $'] = df['Treatment $'].apply(lambda x: float(x))
-    df['$/Hd/Rx'] = df['$/Hd/Rx'].apply(lambda x: float(x))
-    
-    # Remove percent signs from columns and convery str -> float
-    df['Treatment Success'] = df['Treatment Success'].apply(lambda x: float(x[:-1]))
-    df['Case Fatality Rate'] = df['Case Fatality Rate'].apply(lambda x: float(x[:-1]))
-    
-    return None
+    if len(df.columns)==10:
+        for col in df.columns:
+            df[col]=df[col].apply(convert_1)
+    else if len(df.columns)==11:
+        for col in df.columns:
+            df[col]=df[col].apply(convert_2)
+    else:
+        for col in df.columns:
+            df[col]=df[col].apply(convert_3)
 
 
 # ### Run this below to convert to .py file before pushing to GitHub
@@ -180,7 +186,7 @@ get_ipython().system('jupyter nbconvert --to script Antibiotics_by_Risk.ipynb')
 
 
 
-# ### Below is the same code in the ABR_Clean function for testing purposes
+# ### Previous ABR_Clean Version
 
 # In[ ]:
 
