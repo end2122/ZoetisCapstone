@@ -3,7 +3,7 @@
 
 # ### Set up master path
 
-# In[ ]:
+# In[1]:
 
 
 path_master = r'C:/Users/endwy/Documents/Columbia MSBA/Spring 2019/E4524 - Analytics in Practice/Data/Csv/'
@@ -66,6 +66,29 @@ df_ABR3.rename(columns={'0':'Drug', '1':'Treated', '2':'Repulls', '3':'Mortaliti
 for i in range(len(df_ABR3)):
     df_ABR3.iloc[i].loc['Mortalities'] = (df_ABR3.iloc[i].loc['Mortalities'])+(df_ABR3.iloc[i].loc['MortalitiesB'])
 del df_ABR3['MortalitiesB']
+
+
+# ### ABR_4 Import
+# ##### 9 columns, same as ABR_1, no separate cleaning needed
+
+# In[ ]:
+
+
+import pandas as pd
+with open(path_master+'April 2017 - Antibiotic by Risk4.csv') as fp:
+    df_ABR4 = pd.read_csv(fp,
+                         usecols=['0','1','2','3','4','5','7','9'])
+
+
+# ### ABR_5 Import
+# ##### 10 columns, Mortalities split into 2 columns
+
+# In[2]:
+
+
+import pandas as pd
+with open(path_master+'April 2017 - Antibiotic by Risk5.csv') as fp:
+    df_ABR5 = pd.read_csv(fp)
 
 
 # ### Fully merge all ABR versions onto df_ABR
