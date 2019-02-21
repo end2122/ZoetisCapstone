@@ -3,7 +3,7 @@
 
 # ### Set up master path
 
-# In[ ]:
+# In[1]:
 
 
 path_master = r'C:/Users/endwy/Documents/Columbia MSBA/Spring 2019/E4524 - Analytics in Practice/Data/Csv/'
@@ -11,17 +11,35 @@ path_master = r'C:/Users/endwy/Documents/Columbia MSBA/Spring 2019/E4524 - Analy
 
 # ### Create List with ABR file names to iterate through
 
-# In[ ]:
+# In[2]:
 
 
 import re
 import os
 
-#read in files' names
-ABR_file_names = list()
+#read in all CSV file names
+file_names = list()
 for path, subdirs, files in os.walk(path_master):
     for filename in files:
         file_names.append(filename)
+
+
+#segment out ABR files
+pattern = r'Antibiotic by Risk'
+ABR_file_names = [file_name for file_name in file_names if re.search(pattern=pattern, string=file_name)]       
+
+
+# ### Iterate through all file names, open, clean, save as variable with format ABR_#
+
+# In[4]:
+
+
+import pandas as pd
+for filename in ABR_file_names[1:7]:
+    with open(path_master+filename) as fp:
+        df = pd.read_csv(fp)
+        if len(df.columns) == 13:
+            
 
 
 # ### ABR_1 Import
