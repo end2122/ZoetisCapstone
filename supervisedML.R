@@ -2,6 +2,9 @@
 setwd("~/Columbia MSBA/Spring 2019/E4524 - Analytics in Practice/Data/Csv")
 df = read.csv("a_test.csv")
 df$X = NULL
+df$Treated = NULL
+df$Treatment.Success... = df$Treatment.Success.../100
+df$Case.Fatality.Rate... = df$Case.Fatality.Rate.../100
 df = na.omit(df)
 set.seed(1)
 library(leaps)
@@ -15,7 +18,11 @@ library(MASS)
 library(ISLR)
 library(rpart)
 df$Treatment.. = log1p(df$Treatment..)
-colnames(df)
+
+RMSE = function(m, o){
+  sqrt(mean((m - o)^2))
+}
+
 ##################### Linear Regression - LASSO ####################################################
 train = sample(1:nrow(df),0.75*nrow(df)) 
 test = -train
@@ -35,12 +42,7 @@ coef(lasso.mod)
 pred_lasso = predict(lasso.mod, x[test,])
 actual_lasso = y[test]
 
-
-RMSE = function(m, o){
-  sqrt(mean((m - o)^2))
-}
-
-RMSE(pred_lasso,actual_lasso) #2.00 for Treatment$   |   #0.199 for Treatment%
+RMSE(pred_lasso,actual_lasso) #2.00 for Treatment$   |   0.1942 for Treatment%
 
 
 ##################### Partial Least Squares (PLS) Using 10-fold-CV #################################
@@ -80,7 +82,7 @@ rf.pldg=randomForest(Treatment.Success...~.,data=training, mtry=6, ntree=10, imp
 
 # Prediction
 yhat.rf = predict(rf.pldg,newdata=validation)
-RMSE(yhat.rf,y.validation) #1.17 fro Treatment$   |   0.03 for Treatment%
+RMSE(yhat.rf,y.validation) #1.17 for Treatment$   |   0.03 for Treatment%
 
 # Most important predictor
 importance(rf.pldg)
